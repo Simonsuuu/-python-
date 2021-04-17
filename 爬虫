@@ -1,0 +1,30 @@
+import requests
+from lxml import etree
+import csv
+import time
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+#  利用selenium库操控chrome浏览器获取动态JS信息  #
+browser = webdriver.Chrome() 
+browser.get('http://f10.eastmoney.com/f10_v2/FinanceAnalysis.aspx?code=sz000651')
+browser.find_element_by_xpath('//*[@id="zyzbTab"]/li[2]').click()
+time.sleep(3)
+html_text = browser.page_source
+browser.quit()
+#  建立列表储存数据  #
+List=[[] for i in range(39)]
+#  爬取并保存数据  #
+for c in range(1,39):
+    for r in range(1,5):
+        try:
+            text = selector.xpath('//*[@id="report_zyzb"]/table/tbody/tr[{}]/td[{}]/span/text()'.format(c,r))[0]
+        except:
+            text = selector.xpath('//*[@id="report_zyzb"]/table/tbody/tr[{}]/th[{}]/span/text()'.format(c,r))[0]
+        print('c'+str(c)+',r'+str(r))
+        List[c-1].append(text)
+#  利用csv保存数据以便后期使用  #
+with open('geli.csv','wt',encoding='utf-8',newline='') as f:
+    writer = csv.writer(f)
+    for i in List:
+        writer.writerow(i)
+    f.close()
